@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { SpecialtyService } from './specialty/specialty.service';
+import { catchAsync } from '../../shared/catchAsync';
 
-const createSpecialty = async (req: Request, res: Response) => {
-    try {
+const createSpecialty = catchAsync(
+    async (req: Request, res: Response) => {
         const payload = req.body;
         const result = await SpecialtyService.createSpecialty(payload);
         res.status(201).json({
@@ -11,35 +12,22 @@ const createSpecialty = async (req: Request, res: Response) => {
             message: "Specialty created successfully",
             data: result
         });
-    } catch (error: any) {
-        console.log(error);
-        res.status(500).json({
-            success: false,
-            message: "Failed to create specialty",
-            error: error.message
-        })
     }
-}
-const getAllSpecialties = async (req: Request, res: Response) => {
-    try {
+)
+
+const getAllSpecialties = catchAsync(
+    async (req: Request, res: Response) => {
         const specialites = await SpecialtyService.getAllSpecialties();
         res.status(201).json({
             success: true,
             message: "Specialty fetched successfully",
             data: specialites
         });
-    } catch (error: any) {
-        console.log(error);
-        res.status(500).json({
-            success: false,
-            message: "Failed to fetch specialties",
-            error: error.message
-        })
     }
-}
+)
 
-const deleteSpecialty = async (req: Request, res: Response) => {
-    try {
+const deleteSpecialty = catchAsync(
+    async (req: Request, res: Response) => {
         const { id } = req.params;
         const result = await SpecialtyService.deleteSpecialty(id as string);
         res.status(201).json({
@@ -47,15 +35,8 @@ const deleteSpecialty = async (req: Request, res: Response) => {
             message: "Specialty deleted successfully",
             data: result
         });
-    } catch (error: any) {
-        console.log(error);
-        res.status(500).json({
-            success: false,
-            message: "Failed to delete specialty",
-            error: error.message
-        })
     }
-}
+)
 
 export const SpecialtyController = {
     createSpecialty,
