@@ -44,14 +44,14 @@ const deleteSpecialty = async (req: Request, res: Response) => {
         const result = await SpecialtyService.deleteSpecialty(id as string);
         res.status(201).json({
             success: true,
-            message: "Specialty created successfully",
+            message: "Specialty deleted successfully",
             data: result
         });
     } catch (error: any) {
         console.log(error);
         res.status(500).json({
             success: false,
-            message: "Failed to create specialty",
+            message: "Failed to delete specialty",
             error: error.message
         })
     }
