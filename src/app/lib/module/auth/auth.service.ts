@@ -1,6 +1,7 @@
 // import { Role, User } from "../../../../generated/prisma/client";
 import { UserStatus } from "../../../../generated/prisma/enums";
 import { auth } from "../../auth";
+import { prisma } from "../../prisma";
 // import { prisma } from "../../prisma";
 
 interface IRegisterPatientPayload {
@@ -27,10 +28,20 @@ const registerPatient = async (payload: IRegisterPatientPayload) => {
     }
 
     //TODO: Create patient profile in Transaction After Sign Up of Patient in User Model
-    // const patient = await prisma.$transaction(async(tx) =>{
-    //     await tx.pa
-    // })
-    return data
+    const patient = await prisma.$transaction(async (tx) => {
+        const patientTx = await tx.patient.create({
+            data: {
+                userId: data.user.id,
+                name: payload.name,
+                email: payload.email,
+            }
+        })
+        return patientTx
+    })
+    return {
+        ...data,
+        patient
+    }
 }
 
 interface ILoginUserPayload {
