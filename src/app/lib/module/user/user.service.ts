@@ -1,6 +1,6 @@
 
 import { ICreateDoctorPayload } from "./userinterface";
-import { Role, Specialty } from "../../../../generated/prisma/client";
+import { Role, Specialty} from "../../../../generated/prisma/client";
 import { prisma } from "../../prisma";
 import { auth } from "../../auth";
 
