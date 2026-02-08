@@ -46,11 +46,11 @@ export const auth = betterAuth({
     },
 
     session: {
-        expiresIn: Number(ms(Number(envVars.BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN))),
-        updateAge: Number(ms(Number(envVars.BETTER_AUTH_SESSION_TOKEN_UPDATE_EXPIRES_IN))),
+        expiresIn: 60 * 60 * 60 * 24, //1 day in seconds
+        updateAge: 60 * 60 * 60 * 24, //1 day in seconds
         cookieCache: {
             enabled: true,
-            maxAge: Number(ms(Number(envVars.BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN)))
+            maxAge: 60 * 60 * 60 * 24, //1 day in seconds
         }
     }
 
