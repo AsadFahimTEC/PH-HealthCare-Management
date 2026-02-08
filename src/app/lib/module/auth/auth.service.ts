@@ -31,6 +31,7 @@ const registerPatient = async (payload: IRegisterPatientPayload) => {
         throw new AppError(status.BAD_REQUEST, "Failed to register patient");
     }
 
+
     //TODO: Create patient profile in Transaction After Sign Up of Patient in User Model
     try {
         const patient = await prisma.$transaction(async (tx) => {
@@ -43,8 +44,29 @@ const registerPatient = async (payload: IRegisterPatientPayload) => {
             })
             return patientTx
         })
+        const accessToken = tokenUtils.getAccessToken({
+            userId: data.user.id,
+            role: data.user.role,
+            name: data.user.name,
+            email: data.user.email,
+            status: data.user.status,
+            isDeleted: data.user.isDeleted,
+            emailVerified: data.user.emailVerified,
+        });
+        const refreshToken = tokenUtils.getRefreshToken({
+            userId: data.user.id,
+            role: data.user.role,
+            name: data.user.name,
+            email: data.user.email,
+            status: data.user.status,
+            isDeleted: data.user.isDeleted,
+            emailVerified: data.user.emailVerified,
+        });
+
         return {
             ...data,
+            accessToken,
+            refreshToken,
             patient
         }
     } catch (error) {
