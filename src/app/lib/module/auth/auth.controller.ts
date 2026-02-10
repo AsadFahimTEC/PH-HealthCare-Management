@@ -11,7 +11,7 @@ const registerPatient = catchAsync(
 
         const result = await AuthService.registerPatient(payload);
 
-        const {accessToken, refreshToken, token, ...rest} = result;
+        const { accessToken, refreshToken, token, ...rest } = result;
 
         tokenUtils.setAccessTokenCookie(res, accessToken);
         tokenUtils.setRefreshTokenCookie(res, refreshToken);
@@ -36,7 +36,7 @@ const loginPatient = catchAsync(
 
         const result = await AuthService.loginUser(payload);
 
-        const {accessToken, refreshToken, token, ...rest} = result;
+        const { accessToken, refreshToken, token, ...rest } = result;
 
         tokenUtils.setAccessTokenCookie(res, accessToken);
         tokenUtils.setRefreshTokenCookie(res, refreshToken);
@@ -56,7 +56,21 @@ const loginPatient = catchAsync(
     }
 )
 
+const getMe = catchAsync(
+    async (req: Request, res: Response) => {
+        const user = req.user;
+        const result = await AuthService.getMe(user);
+        sendResponse(res, {
+            httpStatusCode: status.OK,
+            success: true,
+            message: "User profile fetched successfully",
+            data: result
+        })
+    }
+)
+
 export const AuthController = {
     registerPatient,
-    loginPatient
+    loginPatient,
+    getMe
 }
