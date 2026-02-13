@@ -5,6 +5,7 @@ import { prisma } from "../../prisma"
 import { IUpdateDoctorPayload } from "./doctor.interface";
 import { UserStatus } from "../../../../generated/prisma/enums";
 
+// /doctors?specialty = cardiology&include=doctorSchedules,appointments
 const getAllDoctors = async () => {
     const doctors = await prisma.doctor.findMany({
         include: {
@@ -16,6 +17,8 @@ const getAllDoctors = async () => {
             }
         }
     })
+
+    // const query = new QueryBuilder().paginate().search().filter();
 
     return doctors;
 }
@@ -136,7 +139,7 @@ const deleteDoctor = async (id: string) => {
             where: { id: isDoctorExist.userId },
             data: {
                 isDeleted: true,
-                deletedAt: new Date(),
+                deletedAT: new Date(),
                 status: UserStatus.DELETED // Optional: you may also want to block the user
             },
         })
