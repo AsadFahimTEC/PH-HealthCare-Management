@@ -5,6 +5,8 @@ import AppError from "../../../errorHelpers/AppError";
 import { IRequestUser } from "../../../interfaces/requestUser.interface";
 import { prisma } from "../../prisma";
 import { IBookAppointmentPayload } from "./appointment.interface";
+import { uuidv7 } from "zod";
+// import { v7 as uuidv7 } from "uuid";
 
 // Pay Now Book Appointment
 const bookAppointment = async (payload : IBookAppointmentPayload, user : IRequestUser) => {
