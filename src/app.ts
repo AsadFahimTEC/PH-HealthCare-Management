@@ -17,13 +17,18 @@ const app: Application = express();
 app.set("query parser", (str: string) => qs.parse(str));
 
 app.set("view engine", "ejs");
-app.set("views",path.resolve(process.cwd(), `src/app/templates`) )
+app.set("views", path.resolve(process.cwd(), `src/app/templates`))
+
+app.post("/webhook", express.raw({ type: "application/json" }), async (req: Request, res: Response) => {
+  console.log("Webhook received", req.body);
+  res.status(200).json({ received: true });
+})
 
 app.use(cors({
-    origin : [envVars.FRONTEND_URL, envVars.BETTER_AUTH_URL, "http://localhost:3000", "http://localhost:5000"],
-    credentials : true,
-    methods : ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders : ["Content-Type", "Authorization"]
+  origin: [envVars.FRONTEND_URL, envVars.BETTER_AUTH_URL, "http://localhost:3000", "http://localhost:5000"],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }))
 
 app.use("/api/auth", toNodeHandler(auth));
