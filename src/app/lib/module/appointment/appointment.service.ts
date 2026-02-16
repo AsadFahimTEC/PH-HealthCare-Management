@@ -6,6 +6,7 @@ import { IRequestUser } from "../../../interfaces/requestUser.interface";
 import { prisma } from "../../prisma";
 import { IBookAppointmentPayload } from "./appointment.interface";
 import { uuidv7 } from "zod";
+import { stripe } from "../../../../config/stripe.config";
 // import { v7 as uuidv7 } from "uuid";
 
 // Pay Now Book Appointment
@@ -159,7 +160,7 @@ const getMyAppointments = async (user: IRequestUser) => {
 }
 
 // 1. Completed Or Cancelled Appointments should not be allowed to update status
-// 2. Doctors can only update Appoinment status from schedule to inprogress or inprogress to complted or schedule to cancelled.
+// 2. Doctors can only update Appointment status from schedule to inprogress or inprogress to completed or schedule to cancelled.
 // 3. Patients can only cancel the scheduled appointment if it scheduled not completed or cancelled or inprogress. 
 // 4. Admin and Super admin can update to any status.
 
