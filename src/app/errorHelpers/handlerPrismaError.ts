@@ -102,101 +102,101 @@ const formatErrorMeta = (meta ?: Record<string, unknown>) : string =>{
     return parts.length > 0 ? parts.join(" |") : ""
 }
 
-// export const handlePrismaClientKnownRequestError = (error: Prisma.PrismaClientKnownRequestError) : TErrorResponse => {
-//     const statusCode = getStatusCodeFromPrismaError(error.code)
-//     const metaInfo = formatErrorMeta(error.meta)
+export const handlePrismaClientKnownRequestError = (error: Prisma.PrismaClientKnownRequestError) : TErrorResponse => {
+    const statusCode = getStatusCodeFromPrismaError(error.code)
+    const metaInfo = formatErrorMeta(error.meta)
 
-//     let cleanMessage = error.message;
+    let cleanMessage = error.message;
 
-//     // Remove the "Invalid `prisma.user.create()` invocation: " part from the message for better readability
-//     cleanMessage = cleanMessage.replace(/Invalid `.*?` invocation:?\s*/i, "")
+    // Remove the "Invalid `prisma.user.create()` invocation: " part from the message for better readability
+    cleanMessage = cleanMessage.replace(/Invalid `.*?` invocation:?\s*/i, "")
 
-//     // split by new line and take the first line as the main message, rest can be added to error sources
+    // split by new line and take the first line as the main message, rest can be added to error sources
 
-//     const lines = cleanMessage.split("\n").filter(line => line.trim());
-//     const mainMessage = lines[0] || "An error occurred with the database operation."
+    const lines = cleanMessage.split("\n").filter(line => line.trim());
+    const mainMessage = lines[0] || "An error occurred with the database operation."
 
-//     const errorSources : TErrorSources[] = [
-//         {
-//             path: error.code,
-//             message : metaInfo ? `${mainMessage} | ${metaInfo}` : mainMessage
-//         }
-//     ] ;
+    const errorSources : TErrorSources[] = [
+        {
+            path: error.code,
+            message : metaInfo ? `${mainMessage} | ${metaInfo}` : mainMessage
+        }
+    ] ;
 
-//     if(error.meta?.cause){
-//         errorSources.push({
-//             path: "cause",
-//             message: String(error.meta.cause)
-//         })
-//     }
+    if(error.meta?.cause){
+        errorSources.push({
+            path: "cause",
+            message: String(error.meta.cause)
+        })
+    }
 
-//     return {
-//         success: false,
-//         statusCode,
-//         message: `Prisma Client Known Request Error: ${mainMessage}`,
-//         errorSources,
-//     }
-// }
+    return {
+        success: false,
+        statusCode,
+        message: `Prisma Client Known Request Error: ${mainMessage}`,
+        errorSources,
+    }
+}
 
-// export const handlePrismaClientUnknownError = (error: Prisma.PrismaClientUnknownRequestError) : TErrorResponse => {
-//     let cleanMessage = error.message;
+export const handlePrismaClientUnknownError = (error: Prisma.PrismaClientUnknownRequestError) : TErrorResponse => {
+    let cleanMessage = error.message;
 
-//     // Remove the "Invalid `prisma.user.create()` invocation: " part from the message for better readability
-//     cleanMessage = cleanMessage.replace(/Invalid `.*?` invocation:?\s*/i, "")
+    // Remove the "Invalid `prisma.user.create()` invocation: " part from the message for better readability
+    cleanMessage = cleanMessage.replace(/Invalid `.*?` invocation:?\s*/i, "")
 
-//     const lines = cleanMessage.split("\n").filter(line => line.trim());
-//     const mainMessage = lines[0] || "An unknown error occurred with the database operation."
+    const lines = cleanMessage.split("\n").filter(line => line.trim());
+    const mainMessage = lines[0] || "An unknown error occurred with the database operation."
 
-//     const errorSources : TErrorSources[] = [
-//         {
-//          path: "Unknown Prisma Error",
-//          message: mainMessage
-//         }
-//     ]
+    const errorSources : TErrorSources[] = [
+        {
+         path: "Unknown Prisma Error",
+         message: mainMessage
+        }
+    ]
 
-//     return {
-//         success: false,
-//         statusCode: status.INTERNAL_SERVER_ERROR,
-//         message: `Prisma Client Unknown Request Error: ${mainMessage}`,
-//         errorSources,
-//     }
-// }
+    return {
+        success: false,
+        statusCode: status.INTERNAL_SERVER_ERROR,
+        message: `Prisma Client Unknown Request Error: ${mainMessage}`,
+        errorSources,
+    }
+}
 
-// export const handlePrismaClientValidationError = (error: Prisma.PrismaClientValidationError) : TErrorResponse => {
-//     let cleanMessage = error.message;
+export const handlePrismaClientValidationError = (error: Prisma.PrismaClientValidationError) : TErrorResponse => {
+    let cleanMessage = error.message;
 
-//     // Remove the "Invalid `prisma.user.create()` invocation: " part from the message for better readability
-//     cleanMessage = cleanMessage.replace(/Invalid `.*?` invocation:?\s*/i, "")
+    // Remove the "Invalid `prisma.user.create()` invocation: " part from the message for better readability
+    cleanMessage = cleanMessage.replace(/Invalid `.*?` invocation:?\s*/i, "")
 
-//     const lines = cleanMessage.split("\n").filter(line => line.trim());
+    const lines = cleanMessage.split("\n").filter(line => line.trim());
 
-//     const errorSources : TErrorSources[] = [];
+    const errorSources : TErrorSources[] = [];
 
-//     // extract field name for field-specific validation errors
-//     // Example message: "Argument `data.email`: Got invalid value `invalid-email` on prisma.user.create()"
-//     const fieldMatch = cleanMessage.match(/Argument `(\w+)`/i);
-//     const fieldName = fieldMatch ? fieldMatch[1] : "Unknown Field";
+    // extract field name for field-specific validation errors
+    // Example message: "Argument `data.email`: Got invalid value `invalid-email` on prisma.user.create()"
+    const fieldMatch = cleanMessage.match(/Argument `(\w+)`/i);
+    const fieldName = fieldMatch ? fieldMatch[1] : "Unknown Field";
 
-//     //main message
+    //main message
 
-//     const mainMessage = lines.find(line => 
-//         !line.includes("Argument") &&
-//         !line.includes("→") &&
-//         line.length > 10
-//     ) || lines[0] ||"Invalid query parameters provided to the database operation."
+    const mainMessage = lines.find(line => 
+        !line.includes("Argument") &&
+        !line.includes("→") &&
+        line.length > 10
+    ) || lines[0] ||"Invalid query parameters provided to the database operation."
 
-//     errorSources.push({
-//         path: fieldName,
-//         message: mainMessage
-//     })
+    errorSources.push({
+        path: fieldName,
+        message: mainMessage
+    })
 
-//     return {
-//         success: false,
-//         statusCode: status.BAD_REQUEST,
-//         message: `Prisma Client Validation Error: ${mainMessage}`,
-//         errorSources,
-//     }
-// }
+    return {
+        success: false,
+        statusCode: status.BAD_REQUEST,
+        message: `Prisma Client Validation Error: ${mainMessage}`,
+        errorSources,
+    }
+}
 
 // export const handlerPrismaClientInitializationError = (error: Prisma.PrismaClientInitializationError) : TErrorResponse => {
 //     const statusCode = error.errorCode ? getStatusCodeFromPrismaError(error.errorCode) : status.SERVICE_UNAVAILABLE
