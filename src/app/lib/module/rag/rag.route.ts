@@ -5,6 +5,10 @@ const router = Router();
 
 router.get("/stats", RagController.getStats);
 
-router.post("/ingest-doctors", RagController.)
+//index doctors data
+router.post("/ingest-doctors", RagController.ingestDoctors);
+
+// query rag
+router.post("/query", RagController.queryRag);
 
 export const RagRoutes = router;
